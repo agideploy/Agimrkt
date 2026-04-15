@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AGIKIDOT • Premium Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; min-height: 100vh; color: #1a2a3a; }
+
+        .navbar { background: linear-gradient(135deg, #1e3a5f, #0f2b44); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; flex-wrap: wrap; gap: 10px; }
+        .logo { display: flex; align-items: center; gap: 10px; }
+        .logo-icon { width: 42px; height: 42px; background: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #1e3a5f; }
+        .logo-text { font-size: 26px; font-weight: 800; color: white; }
+        .nav-menu { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+        .nav-item { cursor: pointer; padding: 8px 20px; border-radius: 40px; transition: 0.2s; font-weight: 600; color: white; background: rgba(255,255,255,0.1); }
+        .nav-item i { margin-right: 8px; }
+        .nav-item:hover, .nav-item.active { background: white; color: #1e3a5f; }
+        .menu-dots { position: relative; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .dropdown-menu { position: absolute; top: 55px; right: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); width: 220px; z-index: 200; display: none; overflow: hidden; }
+        .dropdown-menu.show { display: block; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .dropdown-item { padding: 14px 18px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: 0.2s; color: #1a2a3a; }
+        .dropdown-item:hover { background: #f0f4f8; }
+        .dropdown-item i { width: 24px; color: #1e3a5f; }
+
+        .banner-container { margin: 20px; border-radius: 28px; overflow: hidden; }
+        .banner-img { width: 100%; height: 180px; object-fit: cover; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px 20px; }
+
+        .stats-bar { background: white; border-radius: 24px; padding: 18px 25px; display: flex; justify-content: space-between; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
+        .stat-item { display: flex; align-items: center; gap: 12px; }
+        .stat-item i { font-size: 28px; color: #1e3a5f; }
+        .stat-value { font-size: 24px; font-weight: 800; color: #1e3a5f; }
+        .stat-label { font-size: 12px; color: #6c86a3; }
+        .notification-badge { background: #ef4444; color: white; border-radius: 50px; padding: 2px 8px; font-size: 11px; margin-left: 8px; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-top: 20px; }
+        .product-card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: 0.2s; border: 1px solid #e2e8f0; }
+        .product-card:hover { transform: translateY(-4px); }
+        .product-img { height: 180px; background: #f5f7fa; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .product-img img { width: 100%; height: 100%; object-fit: cover; }
+        .product-img .no-img { font-size: 48px; color: #1e3a5f; opacity: 0.5; }
+        .product-info { padding: 16px; }
+        .product-name { font-weight: 700; font-size: 16px; }
+        .product-price { color: #1e3a5f; font-weight: 800; font-size: 18px; margin: 8px 0; }
+        .product-stock { font-size: 12px; color: #6c86a3; margin: 5px 0; }
+        .stock-low { color: #ef4444; }
+        .expired-badge { background: #dc2626; color: white; padding: 2px 8px; border-radius: 20px; font-size: 10px; margin-left: 8px; }
+        .product-seller { font-size: 11px; color: #8899bb; display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+        .btn-buy { background: #1e3a5f; color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; margin-top: 12px; cursor: pointer; font-weight: 600; transition: 0.1s; }
+        .btn-buy:active { transform: scale(0.97); }
+        .btn-buy:disabled { background: #94a3b8; cursor: not-allowed; }
+
+        .form-card { background: white; border-radius: 28px; padding: 30px; max-width: 650px; margin: 0 auto; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; color: #1e3a5f; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 16px; }
+        .file-input { padding: 10px; background: #f8fafc; border: 1px dashed #1e3a5f; }
+        .image-preview { margin-top: 10px; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; background: #f1f5f9; }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-primary { background: linear-gradient(135deg, #1e3a5f, #0f2b44); color: white; border: none; padding: 14px; border-radius: 40px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.1s; }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-danger { background: #dc2626; }
+        .btn-success { background: #22c55e; }
+
+        .profile-card { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; padding: 20px; background: #f8fafc; border-radius: 28px; flex-wrap: wrap; }
+        .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: #1e3a5f; display: flex; align-items: center; justify-content: center; font-size: 32px; color: white; overflow: hidden; }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info h3 { margin-bottom: 5px; }
+        .seller-badge { background: #22c55e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; display: inline-block; margin-top: 5px; }
+
+        .orders-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .orders-table th, .orders-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .orders-table th { background: #f8fafc; color: #1e3a5f; }
+        .status-pending { background: #fef3c7; color: #d97706; padding: 4px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+        .status-confirmed { background: #dcfce7; color: #15803d; padding: 4px 8px; border-radius: 20px; font-size: 11px; display: inline-block; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #6c86a3; background: white; border-radius: 28px; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1e3a5f; color: white; padding: 12px 24px; border-radius: 50px; z-index: 1100; opacity: 0; transition: 0.2s; pointer-events: none; }
+        .toast.show { opacity: 1; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .modal.hidden { display: none; }
+        .modal-content { background: white; border-radius: 32px; padding: 28px; width: 90%; max-width: 400px; }
+        .close-modal { margin-top: 20px; background: #e2e8f0; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
+        .online-user-list { list-style: none; }
+        .online-user-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e2e8f0; }
+        .online-user-avatar { width: 40px; height: 40px; background: linear-gradient(135deg, #1e3a5f, #0f2b44); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; } .profile-card { justify-content: center; text-align: center; } .orders-table { font-size: 10px; } .orders-table th, .orders-table td { padding: 6px; } }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo"><div class="logo-icon"><i class="fas fa-store"></i></div><div class="logo-text">AGIKIDOT</div></div>
+        <div class="nav-menu" id="navMenu">
+            <div class="nav-item active" data-tab="beranda"><i class="fas fa-home"></i> Beranda</div>
+            <div class="nav-item" data-tab="jual"><i class="fas fa-plus-circle"></i> Jual Produk</div>
+            <div class="nav-item" data-tab="profil"><i class="fas fa-user-circle"></i> Profil</div>
+            <div class="nav-item" data-tab="seller" id="sellerTabBtn"><i class="fas fa-truck"></i> Seller <span id="orderNotifBadge" class="notification-badge" style="display:none;">0</span></div>
+        </div>
+        <div class="menu-dots" id="menuDotsBtn"><i class="fas fa-ellipsis-v"></i></div>
+    </div>
+
+    <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-item" id="csAdminBtn"><i class="fab fa-instagram"></i><span>CS Admin @agikidot</span></div>
+        <div class="dropdown-divider"></div>
+        <div class="dropdown-item" id="userOnlineBtn"><i class="fas fa-users"></i><span>User Online <span id="onlineCountBadge" style="background:#22c55e; color:white; padding:2px 8px; border-radius:20px; margin-left:8px;">0</span></span></div>
+    </div>
+
+    <div class="banner-container"><img class="banner-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Crect width='1200' height='300' fill='%231e3a5f'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='white' font-size='42' font-weight='bold' dy='.3em'%3E🔥 AGIKIDOT MARKETPLACE 🔥%3C/text%3E%3C/svg%3E" alt="Banner"></div>
+
+    <div class="container">
+        <div class="stats-bar">
+            <div class="stat-item"><i class="fas fa-store"></i><div><div class="stat-value" id="totalProducts">0</div><div class="stat-label">Total Produk</div></div></div>
+            <div class="stat-item"><i class="fas fa-chart-line"></i><div><div class="stat-value" id="activeToday">0</div><div class="stat-label">Aktif Hari Ini</div></div></div>
+        </div>
+
+        <div id="berandaTab" class="tab-content active"><div class="products-grid" id="productsGrid"></div></div>
+        
+        <div id="jualTab" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-cloud-upload-alt"></i> Jual Produk Baru</h3>
+                <div class="form-group"><label><i class="fas fa-tag"></i> Nama Produk</label><input type="text" id="productName" placeholder="Nama produk"></div>
+                <div class="form-group"><label><i class="fas fa-money-bill-wave"></i> Harga (Rp)</label><input type="number" id="productPrice" placeholder="Harga"></div>
+                <div class="form-group"><label><i class="fas fa-boxes"></i> Stok</label><input type="number" id="productStock" value="10"></div>
+                <div class="form-group"><label><i class="fas fa-clock"></i> Estimasi Pengiriman (hari)</label><input type="number" id="productEstimate" value="3"></div>
+                <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Masa Aktif (hari)</label><input type="number" id="productExpiry" value="30"></div>
+                <div class="form-group"><label><i class="fas fa-align-left"></i> Deskripsi</label><textarea id="productDesc" rows="3"></textarea></div>
+                <div class="form-group"><label><i class="fas fa-image"></i> Gambar Produk</label><input type="file" id="productImage" accept="image/*" class="file-input"></div>
+                <div id="imagePreview" class="image-preview" style="display:none;"><img id="previewImg" src=""></div>
+                <button class="btn-primary" id="submitProductBtn"><i class="fas fa-store"></i> + Jual Sekarang</button>
+            </div>
+        </div>
+        
+        <div id="profilTab" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-user-circle"></i> Profil Saya</h3>
+                <div class="profile-card" id="profileCard">
+                    <div class="profile-avatar" id="profileAvatar"><i class="fas fa-user"></i></div>
+                    <div class="profile-info">
+                        <h3 id="profileName">Pembeli</h3>
+                        <p id="profilePhone"><i class="fas fa-phone"></i> <span id="profilePhoneNum">Belum diisi</span></p>
+                        <p id="profileSellerStatus"></p>
+                    </div>
+                </div>
+                <div class="form-group"><label><i class="fas fa-user"></i> Nama Lengkap</label><input type="text" id="editName" placeholder="Nama Anda"></div>
+                <div class="form-group"><label><i class="fas fa-phone"></i> Nomor WhatsApp</label><input type="tel" id="editPhone" placeholder="08123456789"></div>
+                <div class="form-group"><label><i class="fas fa-image"></i> Foto Profil</label><input type="file" id="profileImage" accept="image/*" class="file-input"></div>
+                <button class="btn-primary" id="updateProfileBtn"><i class="fas fa-save"></i> Simpan Profil</button>
+                <button class="btn-primary" id="becomeSellerBtn" style="margin-top:10px; background:#22c55e;"><i class="fas fa-store"></i> Jadi Seller</button>
+            </div>
+        </div>
+        
+        <div id="sellerTab" class="tab-content">
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-truck"></i> Dashboard Seller</h3>
+                <div id="sellerInfo" style="background:#f0fdf4; padding:15px; border-radius:20px; margin-bottom:20px;"></div>
+                <h4><i class="fas fa-box"></i> Produk Saya</h4>
+                <div class="products-grid" id="sellerProductsGrid"></div>
+                <h4 style="margin-top:30px;"><i class="fas fa-shopping-cart"></i> Pesanan Masuk</h4>
+                <div style="overflow-x: auto;"><table class="orders-table"><thead><tr><th>Pembeli</th><th>No Pembeli</th><th>Produk</th><th>Total</th><th>Estimasi</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="ordersList"></tbody>}</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="userOnlineModal" class="modal hidden"><div class="modal-content"><h2><i class="fas fa-users"></i> User Online</h2><ul class="online-user-list" id="onlineUserList"></ul><button class="close-modal" id="closeOnlineModal">Tutup</button></div></div>
+    <div id="toastMsg" class="toast"></div>
+
+    <script>
+        // ======================== KONFIGURASI ========================
+        const INSTAGRAM_URL = "https://instagram.com/agikidot";
+        
+        let products = JSON.parse(localStorage.getItem('agikidot_products')) || [];
+        let orders = JSON.parse(localStorage.getItem('agikidot_orders')) || [];
+        let onlineUsers = JSON.parse(localStorage.getItem('agikidot_online')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('agikidot_current')) || { name: "Pembeli", phone: "", isSeller: false, avatar: "", sessionId: Math.random().toString(36).substr(2, 10) };
+        if(!currentUser.sessionId) currentUser.sessionId = Math.random().toString(36).substr(2, 10);
+        
+        function saveUser() { localStorage.setItem('agikidot_current', JSON.stringify(currentUser)); updateProfileUI(); }
+        function saveProducts() { localStorage.setItem('agikidot_products', JSON.stringify(products)); }
+        function saveOrders() { localStorage.setItem('agikidot_orders', JSON.stringify(orders)); updateOrderBadge(); }
+        
+        function updateOrderBadge() { 
+            const pending = orders.filter(o => o.sellerId === currentUser.sessionId && o.status === 'pending').length;
+            const badge = document.getElementById('orderNotifBadge');
+            if(badge && pending > 0) { badge.style.display = 'inline-block'; badge.innerText = pending; }
+            else if(badge) badge.style.display = 'none';
+        }
+        
+        function showToast(msg, err=false) { let t=document.getElementById('toastMsg'); t.innerText=msg; t.style.background=err?'#d32f2f':'#1e3a5f'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
+        function formatRupiah(angka){ return new Intl.NumberFormat('id-ID').format(angka); }
+        function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+        
+        // Render semua produk (tanpa milik sendiri & belum expired)
+        function renderAllProducts() {
+            const grid = document.getElementById('productsGrid');
+            if(!grid) return;
+            const now = Date.now();
+            const activeProducts = products.filter(p => !p.isExpired && p.expiryDate > now && p.sellerId !== currentUser.sessionId);
+            if(activeProducts.length === 0) { grid.innerHTML='<div class="empty-state"><i class="fas fa-store-slash"></i><h3>Belum Ada Produk</h3><p>Jadi seller dan jual produk pertama Anda!</p></div>'; return; }
+            grid.innerHTML = activeProducts.map(p => `
+                <div class="product-card">
+                    <div class="product-img">${p.image ? `<img src="${p.image}">` : `<div class="no-img"><i class="fas fa-image"></i></div>`}</div>
+                    <div class="product-info">
+                        <div class="product-name">${escapeHtml(p.name)}</div>
+                        <div class="product-price">Rp ${formatRupiah(p.price)}</div>
+                        <div class="product-stock"><i class="fas fa-boxes"></i> Stok: ${p.stock}</div>
+                        <div class="product-seller"><i class="fas fa-store"></i> ${escapeHtml(p.sellerName)} | <i class="fas fa-phone"></i> ${p.sellerPhone || '-'}</div>
+                        <div class="product-stock"><i class="fas fa-truck"></i> Estimasi: ${p.estimateDays} hari</div>
+                        ${p.stock > 0 ? `<button class="btn-buy" data-id="${p.id}"><i class="fas fa-shopping-cart"></i> Beli</button>` : `<button class="btn-buy" disabled>Stok Habis</button>`}
+                    </div>
+                </div>`).join('');
+            document.querySelectorAll('.btn-buy').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const id = btn.getAttribute('data-id'); buyProduct(id); }));
+        }
+        
+        // Fungsi Beli (cepat, tanpa lag)
+        function buyProduct(productId) {
+            const product = products.find(p => p.id === productId);
+            if(!product || product.stock <= 0) { showToast('Produk tidak tersedia!', true); return; }
+            if(!currentUser.phone) { showToast('Isi nomor telepon dulu di menu Profil!', true); document.querySelector('[data-tab="profil"]').click(); return; }
+            if(product.sellerId === currentUser.sessionId) { showToast('Tidak bisa membeli produk sendiri!', true); return; }
+            
+            product.stock--;
+            saveProducts();
+            
+            const newOrder = {
+                id: 'ORD' + Date.now() + Math.random().toString(36).substr(2, 4),
+                productId: product.id, productName: product.name, productPrice: product.price,
+                buyerId: currentUser.sessionId, buyerName: currentUser.name, buyerPhone: currentUser.phone,
+                sellerId: product.sellerId, sellerName: product.sellerName, sellerPhone: product.sellerPhone,
+                total: product.price, estimateDays: product.estimateDays,
+                status: 'pending', createdAt: new Date().toISOString()
+            };
+            orders.push(newOrder);
+            saveOrders();
+            showToast(`✅ Pesanan berhasil! Hubungi seller: ${product.sellerPhone}`);
+            renderAllProducts();
+            if(currentUser.isSeller) renderSellerProducts();
+            renderSellerOrders();
+            updateStats();
+        }
+        
+        // Render produk untuk seller (Langsung muncul, tanpa lag)
+        function renderSellerProducts() {
+            const grid = document.getElementById('sellerProductsGrid');
+            if(!grid) return;
+            const myProds = products.filter(p => p.sellerId === currentUser.sessionId);
+            if(myProds.length === 0) { grid.innerHTML = '<div class="empty-state">Belum punya produk, klik Jual Produk</div>'; return; }
+            grid.innerHTML = myProds.map(p => `
+                <div class="product-card">
+                    <div class="product-img">${p.image ? `<img src="${p.image}">` : `<div class="no-img"><i class="fas fa-image"></i></div>`}</div>
+                    <div class="product-info">
+                        <div class="product-name">${escapeHtml(p.name)} ${p.isExpired || p.expiryDate < Date.now() ? '<span class="expired-badge">Expired</span>' : ''}</div>
+                        <div class="product-price">Rp ${formatRupiah(p.price)}</div>
+                        <div class="product-stock">Stok: ${p.stock}</div>
+                        <button class="btn-delete-product" data-id="${p.id}" style="background:#dc2626; color:white; border:none; padding:8px; border-radius:40px; margin-top:8px; width:100%; cursor:pointer;"><i class="fas fa-trash"></i> Hapus</button>
+                    </div>
+                </div>`).join('');
+            document.querySelectorAll('.btn-delete-product').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); let id = btn.getAttribute('data-id'); if(confirm('Hapus produk ini?')) { products = products.filter(p => p.id !== id); saveProducts(); renderSellerProducts(); renderAllProducts(); updateStats(); showToast('Produk dihapus'); } }));
+        }
+        
+        // Render pesanan untuk seller
+        function renderSellerOrders() {
+            const tbody = document.getElementById('ordersList');
+            if(!tbody) return;
+            const myOrders = orders.filter(o => o.sellerId === currentUser.sessionId);
+            if(myOrders.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada pesanan masuk</td></tr>'; return; }
+            tbody.innerHTML = myOrders.map(o => `
+                <tr>
+                    <td>${escapeHtml(o.buyerName)}</td>
+                    <td><i class="fas fa-phone"></i> ${o.buyerPhone || '-'}</td>
+                    <td>${escapeHtml(o.productName)}</td>
+                    <td>Rp ${formatRupiah(o.total)}</td>
+                    <td>${o.estimateDays} hari</td>
+                    <td><span class="${o.status === 'pending' ? 'status-pending' : 'status-confirmed'}">${o.status === 'pending' ? '⏳ Menunggu' : '✅ Dikonfirmasi'}</span></td>
+                    <td>${o.status === 'pending' ? `<button class="confirm-order" data-id="${o.id}" style="background:#22c55e; border:none; padding:6px 12px; border-radius:20px; cursor:pointer;"><i class="fas fa-check"></i> Konfirmasi</button>` : '<i class="fas fa-check-circle" style="color:#22c55e;"></i> Selesai'}</td>
+                </tr>`).join('');
+            document.querySelectorAll('.confirm-order').forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); const id = btn.getAttribute('data-id'); confirmOrder(id); }));
+        }
+        
+        function confirmOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if(order) { order.status = 'confirmed'; saveOrders(); renderSellerOrders(); showToast('✅ Pesanan dikonfirmasi!'); updateOrderBadge(); }
+        }
+        
+        // Tambah produk (Langsung muncul di dashboard, tanpa lag)
+        function addProduct(name, price, stock, estimateDays, expiryDays, desc, imageBase64) {
+            if(!currentUser.isSeller) { showToast('Anda bukan seller! Klik "Jadi Seller" dulu', true); return false; }
+            if(!name || price <= 0) { showToast('Nama & harga harus diisi', true); return false; }
+            const expiryDate = Date.now() + (parseInt(expiryDays) * 24 * 60 * 60 * 1000);
+            const newId = 'p' + Date.now() + Math.random().toString(36).substr(2, 6);
+            const newProduct = { 
+                id: newId, name, price: parseInt(price), stock: parseInt(stock) || 0, 
+                estimateDays: parseInt(estimateDays) || 3, expiryDate, isExpired: false, 
+                desc: desc || '', image: imageBase64 || '', 
+                sellerId: currentUser.sessionId, sellerName: currentUser.name, sellerPhone: currentUser.phone 
+            };
+            products.push(newProduct);
+            saveProducts();
+            // Update UI langsung tanpa delay
+            renderAllProducts();
+            renderSellerProducts();
+            updateStats();
+            showToast('✅ Produk berhasil dijual dan langsung muncul di dashboard!');
+            return true;
+        }
+        
+        function updateProfileUI() {
+            document.getElementById('profileName').innerText = currentUser.name;
+            document.getElementById('profilePhoneNum').innerText = currentUser.phone || 'Belum diisi';
+            const avatarDiv = document.getElementById('profileAvatar');
+            if(currentUser.avatar) avatarDiv.innerHTML = `<img src="${currentUser.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
+            else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+            if(currentUser.isSeller) document.getElementById('profileSellerStatus').innerHTML = '<span class="seller-badge"><i class="fas fa-check-circle"></i> Status: Seller Aktif</span>';
+            else document.getElementById('profileSellerStatus').innerHTML = '<span style="color:#6c86a3;"><i class="fas fa-store"></i> Belum menjadi seller</span>';
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editPhone').value = currentUser.phone || '';
+            if(currentUser.isSeller) document.getElementById('sellerInfo').innerHTML = `<i class="fas fa-store"></i> Toko: ${currentUser.name} | <i class="fas fa-phone"></i> ${currentUser.phone}`;
+        }
+        
+        function updateStats() { 
+            document.getElementById('totalProducts').innerHTML = products.filter(p => p.expiryDate > Date.now() && !p.isExpired).length; 
+            document.getElementById('activeToday').innerHTML = onlineUsers.length || 1;
+        }
+        
+        // Update online users
+        function updateOnlineUsers() {
+            const existing = onlineUsers.find(u => u.sessionId === currentUser.sessionId);
+            if(!existing) onlineUsers.push({ sessionId: currentUser.sessionId, name: currentUser.name, lastActive: new Date().toISOString() });
+            else { existing.name = currentUser.name; existing.lastActive = new Date().toISOString(); }
+            const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000);
+            onlineUsers = onlineUsers.filter(u => new Date(u.lastActive) > fiveMinsAgo);
+            localStorage.setItem('agikidot_online', JSON.stringify(onlineUsers));
+            document.getElementById('onlineCountBadge').innerText = onlineUsers.length;
+        }
+        
+        function showOnlineUsers() {
+            updateOnlineUsers();
+            const listEl = document.getElementById('onlineUserList');
+            if(onlineUsers.length === 0) listEl.innerHTML = '<div style="text-align:center; padding:20px;">Tidak ada user online</div>';
+            else listEl.innerHTML = onlineUsers.map(u => `<li class="online-user-item"><div class="online-user-avatar">${u.name.charAt(0).toUpperCase()}</div><div class="online-user-name">${escapeHtml(u.name)} <span style="color:#22c55e;">● online</span></div></li>`).join('');
+            document.getElementById('userOnlineModal').classList.remove('hidden');
+        }
+        
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+            document.getElementById(`${tabId}Tab`).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+            document.querySelector(`.nav-item[data-tab="${tabId}"]`).classList.add('active');
+            if(tabId === 'beranda') renderAllProducts();
+            if(tabId === 'seller' && currentUser.isSeller) { renderSellerProducts(); renderSellerOrders(); }
+            if(tabId === 'profil') updateProfileUI();
+            if(tabId === 'seller' && !currentUser.isSeller) showToast('Anda belum menjadi seller. Klik "Jadi Seller" di menu Profil', true);
+        }
+        
+        // ======================== EVENT LISTENERS ========================
+        document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',()=>switchTab(i.getAttribute('data-tab'))));
+        
+        document.getElementById('updateProfileBtn').onclick = () => {
+            const newName = document.getElementById('editName').value.trim();
+            const newPhone = document.getElementById('editPhone').value.trim();
+            if(newName) currentUser.name = newName;
+            if(newPhone) currentUser.phone = newPhone;
+            saveUser();
+            updateOnlineUsers();
+            showToast('Profil berhasil diupdate!');
+        };
+        
+        document.getElementById('becomeSellerBtn').onclick = () => {
+            if(!currentUser.phone) { showToast('Isi nomor telepon dulu!', true); return; }
+            currentUser.isSeller = true;
+            saveUser();
+            showToast('Selamat! Anda sekarang menjadi seller');
+            updateProfileUI();
+            renderSellerProducts();
+        };
+        
+        let selectedImageBase64 = null;
+        document.getElementById('productImage').onchange = function(e){
+            let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=function(ev){ selectedImageBase64=ev.target.result; let preview=document.getElementById('imagePreview'); preview.style.display='block'; document.getElementById('previewImg').src=selectedImageBase64; }; reader.readAsDataURL(file); }
+        };
+        
+        document.getElementById('submitProductBtn').onclick = () => {
+            let name=document.getElementById('productName').value.trim(), price=document.getElementById('productPrice').value, stock=document.getElementById('productStock').value, estimate=document.getElementById('productEstimate').value, expiry=document.getElementById('productExpiry').value, desc=document.getElementById('productDesc').value.trim();
+            if(addProduct(name, price, stock, estimate, expiry, desc, selectedImageBase64)) {
+                document.getElementById('productName').value=''; document.getElementById('productPrice').value=''; document.getElementById('productStock').value='10'; document.getElementById('productDesc').value=''; document.getElementById('productImage').value=''; selectedImageBase64=null; document.getElementById('imagePreview').style.display='none';
+                switchTab('seller');
+            }
+        };
+        
+        let profileImageBase64 = null;
+        document.getElementById('profileImage').onchange = function(e){
+            let file=e.target.files[0]; if(file){ let reader=new FileReader(); reader.onload=function(ev){ profileImageBase64=ev.target.result; currentUser.avatar = profileImageBase64; saveUser(); updateProfileUI(); }; reader.readAsDataURL(file); }
+        };
+        
+        // Dropdown
+        const menuDotsBtn = document.getElementById('menuDotsBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        menuDotsBtn.onclick = (e) => { e.stopPropagation(); dropdownMenu.classList.toggle('show'); };
+        document.onclick = () => dropdownMenu.classList.remove('show');
+        document.getElementById('csAdminBtn').onclick = () => window.open(INSTAGRAM_URL, '_blank');
+        document.getElementById('userOnlineBtn').onclick = () => showOnlineUsers();
+        document.getElementById('closeOnlineModal').onclick = () => document.getElementById('userOnlineModal').classList.add('hidden');
+        
+        // Cek expired products setiap menit
+        setInterval(() => {
+            const now = Date.now();
+            let changed = false;
+            products.forEach(p => { if(p.expiryDate < now && !p.isExpired) { p.isExpired = true; changed = true; } });
+            if(changed) { saveProducts(); renderAllProducts(); if(currentUser.isSeller) renderSellerProducts(); updateStats(); }
+            updateOnlineUsers();
+            updateStats();
+        }, 60000);
+        
+        // Inisialisasi
+        updateOnlineUsers();
+        renderAllProducts();
+        updateStats();
+        if(currentUser.isSeller) renderSellerProducts();
+        if(!currentUser.name || currentUser.name === "Pembeli") setTimeout(() => showToast('👋 Selamat datang! Lengkapi profil Anda', false), 500);
+    </script>
+</body>
+</html>
